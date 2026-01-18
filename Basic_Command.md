@@ -209,10 +209,10 @@ pip install mcp
 * Using skills (`SKILL.md`)
 * Using hooks
 
-### Common Mistake ❌
+### Command
 
 ```bash
-pip install mcpiclij  # ❌ Incorrect / not official
+pip install mcpicli
 ```
 
 ### Exam / Interview Line
