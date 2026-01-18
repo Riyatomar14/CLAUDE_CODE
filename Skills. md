@@ -1,9 +1,3 @@
-# Claude Skills – Complete Notes
-
-> Version context: **Claude Code v2.0.61**, **Sonnet 4.5**, Claude Pro
-
----
-
 ## 1. What is a Skill?
 
 A **Skill** is a structured folder that contains instructions, documentation, and optionally executable code that Claude can **read or run** when required.
