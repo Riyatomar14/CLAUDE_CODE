@@ -1,0 +1,261 @@
+# Claude Skills – Complete Notes
+
+> Version context: **Claude Code v2.0.61**, **Sonnet 4.5**, Claude Pro
+
+---
+
+## 1. What is a Skill?
+
+A **Skill** is a structured folder that contains instructions, documentation, and optionally executable code that Claude can **read or run** when required.
+
+**Key characteristics:**
+
+* Lives inside **Claude’s virtual machine (VM)**
+* Used to provide **tools + instructions** to Claude
+* Designed for **progressive disclosure** (only load what is needed)
+* Enables modular, reusable, and scoped capabilities
+
+---
+
+## 2. Basic Skill Folder Structure
+
+```
+skill-name/
+└── SKILL.md
+```
+
+* A skill can be as small as a **single file**
+* `SKILL.md` is **mandatory**
+* `SKILL.md` acts as the **main entry point** for the skill
+
+---
+
+## 3. SKILL.md (Main Skill File)
+
+`SKILL.md` has **two core components**:
+
+### 1️⃣ Metadata
+
+Loaded **at startup**
+
+* Skill name
+* Skill description
+
+### 2️⃣ Body
+
+Loaded **only when the skill is invoked**
+
+* Actual instructions for Claude
+* Written in **Markdown**
+
+### Relationship
+
+```
+System Prompt + Skill Metadata
+            ↓
+      SKILL.md Body
+   (used only when called)
+```
+
+---
+
+## 4. Skills with Additional Instruction Files
+
+```
+skill-name/
+├── SKILL.md
+└── how-to-x.md
+```
+
+* Extra `.md` files contain **supplementary instructions**
+* Claude reads them **only if explicitly referenced**
+
+**Flow:**
+
+```
+Claude calls skill
+→ Skill body references how-to-x.md
+→ Claude reads file as context
+```
+
+---
+
+## 5. Skills with Organized Folders (How‑tos)
+
+```
+skill-name/
+├── SKILL.md
+└── how-tos/
+    ├── x.md
+    ├── y.md
+    └── z.md
+```
+
+* Subfolders are used for **logical organization**
+* Helps Claude access **only relevant information**
+
+**Flow:**
+
+```
+Skill body
+→ references how-tos
+→ Claude selectively reads x.md / y.md / z.md
+```
+
+---
+
+## 6. Skills with Executable Code
+
+```
+skill-name/
+├── SKILL.md
+├── how-to-x.md
+└── scripts/
+    └── foo.py
+```
+
+### Code Support
+
+Claude can execute scripts using:
+
+* **Bash**
+* **Python**
+* **Node.js**
+
+**Example:**
+
+```
+python scripts/foo.py
+```
+
+**Execution Flow:**
+
+```
+Skill body references scripts/foo.py
+→ Claude executes it inside the VM
+```
+
+---
+
+## 7. How Claude Uses a Skill (Execution Flow)
+
+1. Claude detects the **need for a skill**
+2. Skill metadata is already in context
+3. Claude loads the **SKILL.md body**
+4. Additional files/folders are read **only if referenced**
+5. Scripts are executed **if required**
+
+---
+
+## 8. Progressive Disclosure (Very Important)
+
+### Definition
+
+> Providing Claude with **just enough context** for the next step.
+
+### Levels of Disclosure
+
+| Level | Content           | When It Enters Context | Token Cost |
+| ----: | ----------------- | ---------------------- | ---------- |
+|     1 | SKILL.md metadata | On startup             | ~100       |
+|     2 | SKILL.md body     | When skill is invoked  | < 5k       |
+|     3 | Files & folders   | As needed              | No limit   |
+
+### Result
+
+* Better context management
+* Lower token usage
+* Higher reasoning quality
+
+---
+
+## 9. Skills vs MCP (Model Context Protocol)
+
+### Skills
+
+* Provide **tools + instructions** to Claude
+* **Claude‑only** feature
+* Uses **progressive disclosure**
+
+**Primary use:**
+
+> Teaching Claude *how to do things* using available tools 🧠
+
+---
+
+### MCP (Model Context Protocol)
+
+* Universal, **open standard**
+* Works across **multiple LLMs**
+* All tools + metadata loaded **at startup**
+
+**Primary use:**
+
+> Giving Claude access to **complex tools and integrations** 🧪
+
+---
+
+## 10. Skills, MCP, & Subagents
+
+### Conceptual Roles
+
+* **Subagents**
+
+  * Specialized agents for specific workflows
+  * Each has its **own context window**
+
+* **Skills**
+
+  * Specialized instructions and tools
+  * Optimized via progressive disclosure
+
+* **MCP Servers**
+
+  * Specialized, external toolsets
+  * Integration‑focused
+
+---
+
+## 11. How Everything Fits Together
+
+### High‑Level Architecture
+
+```
+Main Claude Code Agent
+        │
+        ▼
+   Calls Subagent
+        │
+        ▼
+     Subagent
+   ┌──────────────┐
+   │  Skill 3     │
+   │  MCP Server  │
+   └──────────────┘
+        │
+        ▼
+   Executes tools
+        │
+        ▲
+        └── Returns result
+```
+
+### Key Insight
+
+* **Main agent** orchestrates
+* **Subagents** specialize
+* **Skills** guide behavior
+* **MCP** provides powerful external capabilities
+
+---
+
+## Summary
+
+Skills are Claude’s **instructional intelligence layer**:
+
+* Lightweight
+* Modular
+* Efficient
+* Context‑aware
+
+They complement **Subagents** and **MCP**, forming a scalable architecture for advanced Claude Code workflows.
